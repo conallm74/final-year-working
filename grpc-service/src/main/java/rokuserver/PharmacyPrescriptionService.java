@@ -41,7 +41,7 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
             @Override
             public void onNext(PharmacyPrescriptionRequest request) {
 
-
+                Prescription prescription = request.getPrescriptionId();
 
                 PrescriptionController.getTheSentPrescription
 

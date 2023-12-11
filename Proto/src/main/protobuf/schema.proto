@@ -43,6 +43,10 @@ message PharmacyPrescriptionResponse {
   int32 pharmacy_id = 10;
 }
 
+
+
+
+
 service PrescriptionService {
   rpc ServerStreamingRPC (stream PharmacyPrescriptionRequest) returns (stream PharmacyPrescriptionResponse);
 }
