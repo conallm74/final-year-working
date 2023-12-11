@@ -1,0 +1,268 @@
+public class PrescriptionDTO {
+
+    private int patientId;
+    private String patientFirstName;
+
+    private String patientLastName;
+
+    private int prescriptionId;
+
+    private String medicationName;
+
+    private String dosage;
+
+    private LocalDate prescriptionDate;
+    private String patientAddress;
+
+    private String prescribingDoctor;
+
+
+    // constructors
+    public PrescriptionDTO(int prescriptionId, String medicationName, String dosage, Date prescriptionDate, int patientId, String firstName, String lastName, String address){}
+
+    public PrescriptionDTO(int patientId, String patientFirstName, String patientLastName, Date prescriptionId, String medicationName, int dosage, String prescriptionDate, String patientAddress, String prescribingDoctor) {
+        this.patientId = patientId;
+        this.patientFirstName = patientFirstName;
+        this.patientLastName = patientLastName;
+        this.prescriptionId = prescriptionId;
+        this.medicationName = medicationName;
+        this.dosage = dosage;
+        this.prescriptionDate = prescriptionDate;
+        this.patientAddress = patientAddress;
+        this.prescribingDoctor = prescribingDoctor;
+    }
+
+    // implement mapping
+    PrescriptionDTO convertPrescriptiontoDTO(Prescription thePrescription, Patient thePatient) {
+        PrescriptionDTO dto = new PrescriptionDTO(
+                        thePrescription.getPrescriptionId(),
+                        thePrescription.getMedicationName(),
+                        thePrescription.getDosage(),
+                        thePrescription.getPrescriptionDate(),
+                        thePrescription.getPrescribingDoctor(),
+                thePatient.getPatientId(),
+                thePatient.getFirstName(),
+                thePatient.getLastName(),
+                thePatient.getAddress()
+                );
+        return dto;
+
+    }
+
+    // getters and setters
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getPatientFirstName() {
+        return patientFirstName;
+    }
+
+    public void setPatientFirstName(String patientFirstName) {
+        this.patientFirstName = patientFirstName;
+    }
+
+    public String getPatientLastName() {
+        return patientLastName;
+    }
+
+    public void setPatientLastName(String patientLastName) {
+        this.patientLastName = patientLastName;
+    }
+
+    public int getPrescriptionId() {
+        return prescriptionId;
+    }
+
+    public void setPrescriptionId(int prescriptionId) {
+        this.prescriptionId = prescriptionId;
+    }
+
+    public String getMedicationName() {
+        return medicationName;
+    }
+
+    public void setMedicationName(String medicationName) {
+        this.medicationName = medicationName;
+    }
+
+    public String getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
+    }
+
+    public LocalDate getPrescriptionDate() {
+        return prescriptionDate;
+    }
+
+    public void setPrescriptionDate(LocalDate prescriptionDate) {
+        this.prescriptionDate = prescriptionDate;
+    }
+
+    public String getPatientAddress() {
+        return patientAddress;
+    }
+
+    public void setPatientAddress(String patientAddress) {
+        this.patientAddress = patientAddress;
+    }
+
+    public String getPrescribingDoctor() {
+        return prescribingDoctor;
+    }
+
+    public void setPrescribingDoctor(String prescribingDoctor) {
+        this.prescribingDoctor = prescribingDoctor;
+    }
+
+      public PrescriptionDTO(int prescriptionId, int patientId, String medicationName, Date prescriptionDate, String prescribingDoctor, String dosage) {
+            this.prescriptionId = prescriptionId;
+            this.patientId = patientId;
+            this.medicationName = medicationName;
+            this.prescriptionDate = prescriptionDate;
+            this.prescribingDoctor = prescribingDoctor;
+            this.dosage = dosage;
+        }
+
+        PrescriptionDTO convertPrescriptiontoDTO(Prescription thePrescription){
+            PrescriptionDTO dto = new PrescriptionDTO(
+                    thePrescription.getPrescriptionId(),
+                    thePrescription.getPatientId(),
+                    thePrescription.getMedicationName(),
+                    thePrescription.getPrescriptionDate(),
+                    thePrescription.getPrescribingDoctor(),
+                    thePrescription.getDosage()
+            );
+            return dto;
+        }
+
+    (From prescription class)
+
+    Prescription convertDTOToPrescription(PrescriptionDTO dto){
+            Prescription prescription = new Prescription(
+                    dto.getPrescriptionId(),
+                    dto.getPatientId(),
+                    dto.getMedicationName(),
+                    dto.getPrescriptionDate(),
+                    dto.getPrescribingDoctor(),
+                    dto.getDosage()
+            );
+        }
+
+from the DTO class
+ /*
+    Your DTO should have an empty constructor, and each field should have getters and setters to make the mapping work
+     */
+    /*
+
+    public PrescriptionDTO(int prescriptionId, int patientId, String medicationName, Date prescriptionDate, String prescribingDoctor, String dosage,
+                            String patientFirstName, String patientLastName, String patientAddress
+    ) {
+        this.prescriptionId = prescriptionId;
+        this.patientId = patientId;
+        this.medicationName = medicationName;
+        this.prescriptionDate = prescriptionDate;
+        this.prescribingDoctor = prescribingDoctor;
+        this.dosage = dosage;
+        this.patientFirstName = patientFirstName;
+        this.patientLastName = patientLastName;
+        this.patientAddress = patientAddress;
+    }
+
+    PrescriptionDTO convertPrescriptiontoDTO(Prescription thePrescription, Patient thePatient){
+        PrescriptionDTO dto = new PrescriptionDTO(
+                thePrescription.getPrescriptionId(),
+                thePrescription.getPatientId(),
+                thePrescription.getMedicationName(),
+                thePrescription.getPrescriptionDate(),
+                thePrescription.getPrescribingDoctor(),
+                thePrescription.getDosage(),
+                thePatient.getPatientFirstName(),
+                thePatient.getPatientLastName(),
+                thePatient.getPatientAddress()
+        );
+        return dto;
+    }
+
+     */
+
+
+<form action="@{/prescriptions/prescribePrescription}" th:object="${patient}" method="POST">
+
+    <!-- Adding hidden form fields to handle updates -->
+    <input type="hidden" th:field="*{patientId}">
+
+
+    <p>Patient First Name: <span th:text="*{patientFirstName}"></span></p>
+    <p>Patient Last Name: <span th:text="*{patientLastName}"></span></p>
+    <p>Patient Address: <span th:text="*{patientAddress}"></span></p>
+
+    <div th:object="${prescription}">
+    <!-- Prescription fields -->
+        <input type="hidden" th:field="*{prescriptionId}">
+        <input type="hidden" th:field="*{patientId}">
+    <input type="text" th:field="*{medicationName}" class="form-control mb-4 w-25" placeholder="Medication">
+    <input type="text" th:field="*{prescriptionDate}" class="form-control mb-4 w-25" placeholder="Date of Prescription">
+    <input type="text" th:field="*{dosage}" class="form-control mb-4 w-25" placeholder="Dose">
+    <input type="text" th:field="*{prescribingDoctor}" class="form-control mb-4 w-25" placeholder="Prescriber">
+    </div>
+    <!-- enter a radio button for send to pharmacy or send to patient (QRCode) -->
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-info col-2">Submit</button>
+</form>
+
+
+
+
+<div id="pharmacyDetails" style="display: none;">
+        <select class="form-control" th:field="{pharmacies}" id="pharmaciesDropdown">
+            <option th:each="pharmacy : ${pharmacyName}" : th:value="pharmacy" th:text="${pharmacyName}"></option>
+        </select>
+    </div>
+
+     <!--
+            <select class="form-control" th:field="*{pharmacyName}">
+                <option th:each="tempPharmacy : ${pharmacies}" th:value="${tempPharmacy.pharmacyName}" th:text="${tempPharmacy.pharmacyName}"></option>
+            </select>
+            -->
+
+                    <option th:each="pharmacy : ${pharmacies}" th:value="${pharmacy.pharmacyName}" th:text="${pharmacy.pharmacyName}"></option>
+
+
+
+
+
+
+ function updateRecipientId() {
+            var selectedPharmacy = document.getElementById('pharmaciesDropdown');
+            var recipientIdField = document.getElementById('pharmacyRecipientId');
+            recipientIdField.value = selectedPharmacy.value;
+        }
+
+
+
+
+   function updateRecipientId() {
+    var dropdown = document.getElementById('pharmaciesDropdown');
+    var hiddenInput = document.getElementById('recipientIdInput'); // Add an id to your hidden input
+
+    // Assuming each option value is the pharmacy ID
+    var selectedPharmacyId = dropdown.options[dropdown.selectedIndex].value;
+
+    // Set the selected pharmacy ID to the hidden input
+    hiddenInput.Value = selectedPharmacyId;
+}
+
+ <select class="form-control" id="pharmaciesDropdown" name="pharmacyRecipientId" onchange="updateRecipientId()">
+            <option th:each="pharmacy : ${pharmacies}" th:value="${pharmacy.pharmacyRecipientId}" th:data-recipient-id="${pharmacy.pharmacyRecipientId}" th:text="${pharmacy.pharmacyName}"></option>
+            <!--   <option th:each="pharmacy : ${pharmacies}" th:value="${pharmacy.pharmacyRecipientId + '-' + pharmacy.pharmacyName}" th:text="${pharmacy.pharmacyName}"></option> -->
+        </select>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Roku Home Page</title>
+</head>
+<body>
+<h2>Company Home Page</h2>
+  <hr>
+    <p>
+      Welcome to Roku!
+    </p>
+    <hr>
+    <!-- Display User Name and Role -->
+    <p>
+      User: <span sec:authentication="principal.username"></span>
+      <br><br>
+      Role(s): <span sec:authentication="principal.authorities"></span>
+    </p>
+  <hr>
+
+<div sec:authorize="hasAnyRole('DOCTOR', 'ADMIN')">
+<!-- Add a link to point to /leaders -->
+    <p>
+      <a th:href="@{/patients/patientList}">View Patients</a>
+    </p>
+</div>
+
+<!-- Add a link to point to /leaders -->
+<div sec:authorize="hasRole('ADMIN')">
+  <p>
+    <a th:href="@{/systems}">systems Meeting</a>
+    (only for systems)
+  </p>
+</div>
+
+
+<!-- Add a Link for the Employees list, making it visible to admins -->
+<div sec:authorize="hasRole('ADMIN')">
+  <p>
+    <a th:href="@{/employees/employeeList}">View Employees</a>
+    Text
+  </p>
+</div>
+
+
+<!-- Log out Button -->
+<form action="#" th:action="@{/logout}" method="POST">
+  <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>

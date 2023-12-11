@@ -1,0 +1,5 @@
+grpc:
+  client:
+    grpc-pharmacy-service:
+      address: static://localhost:8080
+      negotiationType: plaintext

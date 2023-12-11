@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<title>Prescription Manager</title>
+
+<body>
+<div class="container">
+
+    <h3>Patient Directory</h3>
+    <hr>
+    <!-- adding button for adding a new employee -->
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Patient Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <div>
+            <th>Action</th>
+            </div>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="tempPatient : ${patient}">
+
+            <td th:text="${tempPatient.patientId}" />
+            <td th:text="${tempPatient.patientFirstName}"></td>
+            <td th:text="${tempPatient.patientLastName}" />
+            <td th:text="${tempPatient.patientEmail}" />
+            <td th:text="${tempPatient.patientAddress}" />
+
+
+            <!-- add a link for managing prescriptions -->
+            <div sec:authorize="hasRole('DOCTOR')">
+                <td>
+                    <a th:href="@{/prescriptions/showPresForm(patientId=${tempPatient.patientId})}"
+                       class="btn btn-primary btn-sm mb-3">
+                        Manage Prescription
+                    </a>
+                </td>
+            </div>
+            <!-- add a link for updating employees -->
+            <div sec:authorize="hasRole('ADMIN')">
+                <td>
+                    <a th:hred="@{/}"
+                       class="btn btn-primary btn-sm mb-3">
+                        Update Patient details
+                    </a>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+            <!-- add link for an update -->
+
+<a th:href="@{/}">Back to home page</a>
+</body>
+</html>
+
+

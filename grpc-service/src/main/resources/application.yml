@@ -1,0 +1,7 @@
+#
+# mention a port on which to run the grpc server
+#
+
+grpc:
+  server:
+    port: 8080
