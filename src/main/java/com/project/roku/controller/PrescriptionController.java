@@ -8,6 +8,7 @@ import com.project.roku.services.patient_services.PatientRepoService;
 import com.project.roku.services.pharmacy_services.PharmaRepoService;
 import com.project.roku.services.pharmacy_services.PharmaRepoServiceImpl;
 import com.project.roku.services.prescription_services.PrescriptionRepoService;
+import com.project.roku.services.producers.PrescriptionsProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping("/prescriptions")
 public class PrescriptionController {
+
+    // injecting the prescriptions Producer
+    private final PrescriptionsProducer prescriptionsProducer;
 
 
     private PatientRepoService patientService;
@@ -33,10 +38,11 @@ public class PrescriptionController {
 
     @Autowired
     public PrescriptionController(
-            PatientRepoService patientService,
+            PrescriptionsProducer prescriptionsProducer, PatientRepoService patientService,
             PrescriptionRepoService prescriptionService,
             PharmaRepoService pharmacyRepoService
     ) {
+        this.prescriptionsProducer = prescriptionsProducer;
         this.pharmacyRepoService = pharmacyRepoService;
         this.patientService = patientService;
         this.prescriptionService = prescriptionService;
@@ -64,31 +70,28 @@ public class PrescriptionController {
         return "prescriptions/prescription-form";
     }
 
-    // reference for the sent prescription
 
-    Prescription theSentPrescription;
 
-    // save the new prescription
+    // save the new prescription, convert to dto, and send to the Rabbit Queue
     @PostMapping("/prescribePrescription")
-    public String prescribePrescription(@ModelAttribute("prescription") Prescription thePrescription){
+    public String prescribePrescription(@ModelAttribute("prescription") Prescription thePrescription, Patient thePatient){
 
         prescriptionService.save(thePrescription);
 
-        PrescriptionSender sender = new PrescriptionSender();
-        sender.sendPrescription(thePrescription);
+        // convert the prescription to the dto
+        PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
+
+        // Send the prescription DTO to the RabbitMQ queue
+        prescriptionsProducer.sendThePrescription(prescriptionDTO);
 
 
-        theSentPrescription = thePrescription;
         return "redirect:patients/patient-list";
     }
 
-    @PostMapping("/sendPrescription")
-    public String sendPrescription(@ModelAttribute("prescription") Prescription thePrescription,
-                                   @ModelAttribute("patient") Patient thePatient,
-                                   Model theModel) {
-        // create DTO for gRPC
-        PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
 
+    // method to convert the prescription to a dto
+    private PrescriptionDTO convertToDTO(Prescription thePrescription, Patient thePatient) {
+        PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
         // map related fields
         prescriptionDTO.setPatientFirstName(thePatient.getPatientFirstName());
         prescriptionDTO.setPatientLastName(thePatient.getPatientLastName());
@@ -98,25 +101,7 @@ public class PrescriptionController {
         prescriptionDTO.setPrescriptionId(thePrescription.getPrescriptionId());
         prescriptionDTO.setPatientAddress(thePatient.getPatientAddress());
         prescriptionDTO.setMedicationName(thePrescription.getMedicationName());
-
-        // send to server
-        // grpcService.sendPrescription(prescriptionDTO);
-
-        return null;
+        return prescriptionDTO;
     }
 
-    public Prescription getTheSentPrescription() {
-        return theSentPrescription;
-    }
-
-    public void setTheSentPrescription(Prescription theSentPrescription) {
-        this.theSentPrescription = theSentPrescription;
-    }
-
-    @Override
-    public String toString() {
-        return "PrescriptionController{" +
-                "theSentPrescription=" + theSentPrescription +
-                '}';
-    }
 }

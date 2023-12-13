@@ -12,16 +12,7 @@ import "google/protobuf/timestamp.proto";
 
 
 message PharmacyPrescriptionRequest {
-  string patient_first_name = 1;
-  string patient_last_name = 2;
-  string patient_address = 3;
-  string prescriber_name = 4;
-  int32 prescription_id = 5;
-  string medication_name = 6;
-  google.protobuf.Timestamp prescription_date = 7;
-  string dosage = 8;
-  Target target_type = 9;
-  int32 pharmacy_id = 10;
+  int32 pharmacy_id = 1;
 
 }
 
@@ -42,10 +33,6 @@ message PharmacyPrescriptionResponse {
   Target target_type = 9;
   int32 pharmacy_id = 10;
 }
-
-
-
-
 
 service PrescriptionService {
   rpc ServerStreamingRPC (stream PharmacyPrescriptionRequest) returns (stream PharmacyPrescriptionResponse);

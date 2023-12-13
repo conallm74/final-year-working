@@ -1,33 +1,15 @@
 package rokuserver;
 
-import com.project.roku.controller.PrescriptionController;
-import com.project.roku.medical_entities.Prescription;
-import com.project.roku.services.prescription_services.PrescriptionServiceImpl;
+
+
 import com.proto.prescription.PharmacyPrescriptionRequest;
 import com.proto.prescription.PharmacyPrescriptionResponse;
 import com.proto.prescription.PrescriptionServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @GrpcService
 public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.PrescriptionServiceImplBase {
-
-    // reference for PrescriptionServiceImpl
-    private final PrescriptionServiceImpl prescriptionService;
-
-    private final PrescriptionController prescriptionController;
-
-    private final Prescription prescription;
-
-    // injecting the prescription services to make use of their methods
-    @Autowired
-    public PharmacyPrescriptionService(PrescriptionServiceImpl prescriptionService, PrescriptionController prescriptionController, Prescription prescription) {
-        this.prescriptionService = prescriptionService;
-        this.prescriptionController = prescriptionController;
-        this.prescription = prescription;
-    }
-
 
 
     @Override
@@ -35,18 +17,38 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
 
         return new StreamObserver<PharmacyPrescriptionRequest>() {
 
-            // get the reference of theSentPrescription ? How?
-
-
             @Override
             public void onNext(PharmacyPrescriptionRequest request) {
-
-                Prescription prescription = request.getPrescriptionId();
-
-                PrescriptionController.getTheSentPrescription
+                // PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
+                // prescriptionDTO.setPatientFirstName(request.getPatientFirstName());
 
 
+/*
+                String patientFirstName = request.getPatientFirstName();
+                String patientLastName = request.getPatientLastName();
+                String patientAddress = request.getPatientAddress();
+                String prescriberName = request.getPrescriberName();
+                String medicationName = request.getMedicationName();
 
+ */
+
+
+                /*
+                  string patient_last_name = 2;
+  string patient_address = 3;
+  string prescriber_name = 4;
+  int32 prescription_id = 5;
+  string medication_name = 6;
+  google.protobuf.Timestamp prescription_date = 7;
+  string dosage = 8;
+  Target target_type = 9;
+  int32 pharmacy_id = 10;
+                 */
+
+               //  String dosage = request.getDosage();
+               //  int prescriptionId = request.getPrescriptionId();
+
+/*
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPrescriptionId(request.getPrescriptionId()).build());
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPatientFirstName(request.getPatientFirstName()).build());;
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPatientLastName(request.getPatientLastName()).build());
@@ -55,6 +57,8 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setMedicationName(request.getMedicationName()).build());
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setDosage(request.getDosage()).build());
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPharmacyId(request.getPharmacyId()).build());
+
+ */
             }
 
             @Override
@@ -68,4 +72,31 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
             }
         };
     }
+
+    /*
+    @Service
+public class PharmacyPrescriptionServiceImpl extends PharmacyPrescriptionServiceGrpc.PharmacyPrescriptionServiceImplBase {
+
+    @Override
+    public void sendPrescription(PharmacyPrescriptionRequest request, StreamObserver<PharmacyPrescriptionResponse> responseObserver) {
+        // Implement logic to process the received prescription data
+        String prescriptionData = request.getPrescriptionData();
+        System.out.println("Received prescription data from doctor: " + prescriptionData);
+
+        // Process the prescription data as needed
+
+        // Send a response back to the doctor
+        PharmacyPrescriptionResponse response = PharmacyPrescriptionResponse.newBuilder()
+                .setMessage("Prescription received and processed")
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+}
+     */
+
+
+
+
 }
