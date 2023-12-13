@@ -2,6 +2,7 @@ package rokuserver;
 
 
 
+import com.project.roku.DTO.PrescriptionDTO;
 import com.proto.prescription.PharmacyPrescriptionRequest;
 import com.proto.prescription.PharmacyPrescriptionResponse;
 import com.proto.prescription.PrescriptionServiceGrpc;
@@ -19,7 +20,37 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
 
             @Override
             public void onNext(PharmacyPrescriptionRequest request) {
-                // PrescriptionDTO prescriptionDTO = new PrescriptionDTO();
+
+                int pharmacyId = request.getPharmacyId();
+
+                // create
+                PrescriptionDTO prescriptionDTO = getPrescriptionDTO(request.getPharmacyId());
+
+                /*
+                 // Use the populated PrescriptionDTO from the controller
+        PrescriptionDTO prescriptionDTO = getPrescriptionDTO(request.getPharmacyId());
+
+
+              // Create a PharmacyPrescriptionResponse message and populate it with data from the DTO
+        PharmacyPrescriptionResponse.Builder responseBuilder = PharmacyPrescriptionResponse.newBuilder()
+            .setPatientFirstName(prescriptionDTO.getPatientFirstName())
+            .setPatientLastName(prescriptionDTO.getPatientLastName())
+            .setPatientAddress(prescriptionDTO.getPatientAddress())
+            .setPrescriberName(prescriptionDTO.getPrescriberName())
+            .setPrescriptionId(prescriptionDTO.getPrescriptionId())
+            .setMedicationName(prescriptionDTO.getMedicationName())
+            .setPrescriptionDate(Timestamp.newBuilder().setSeconds(prescriptionDTO.getPrescriptionDate().getTime() / 1000).build())
+            .setDosage(prescriptionDTO.getDosage())
+            .setTargetType(Target.PHARMACY)
+            .setPharmacyId(prescriptionDTO.getPharmacyId());
+
+        // Send the response to the client
+        responseObserver.onNext(responseBuilder.build());;
+
+
+
+                 */
+
                 // prescriptionDTO.setPatientFirstName(request.getPatientFirstName());
 
 

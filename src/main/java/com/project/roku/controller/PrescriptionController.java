@@ -1,6 +1,7 @@
 package com.project.roku.controller;
 
 import com.project.roku.DTO.PrescriptionDTO;
+import com.project.roku.dao.DTORepo;
 import com.project.roku.entity.Patient;
 import com.project.roku.medical_entities.Pharmacy;
 import com.project.roku.medical_entities.Prescription;
@@ -10,6 +11,7 @@ import com.project.roku.services.pharmacy_services.PharmaRepoServiceImpl;
 import com.project.roku.services.prescription_services.PrescriptionRepoService;
 import com.project.roku.services.producers.PrescriptionsProducer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +27,7 @@ public class PrescriptionController {
     // injecting the prescriptions Producer
     private final PrescriptionsProducer prescriptionsProducer;
 
-
+    private final DTORepo dtoRepo;
     private PatientRepoService patientService;
 
     // injecting prescription service
@@ -33,16 +35,21 @@ public class PrescriptionController {
 
     private PharmaRepoService pharmacyRepoService;
 
+    // import Rabbit template
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Autowired
     PharmaRepoServiceImpl serviceImpl;
 
     @Autowired
     public PrescriptionController(
-            PrescriptionsProducer prescriptionsProducer, PatientRepoService patientService,
+            PrescriptionsProducer prescriptionsProducer, DTORepo dtoRepo, PatientRepoService patientService,
             PrescriptionRepoService prescriptionService,
             PharmaRepoService pharmacyRepoService
     ) {
         this.prescriptionsProducer = prescriptionsProducer;
+        this.dtoRepo = dtoRepo;
         this.pharmacyRepoService = pharmacyRepoService;
         this.patientService = patientService;
         this.prescriptionService = prescriptionService;
@@ -80,9 +87,11 @@ public class PrescriptionController {
 
         // convert the prescription to the dto
         PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
+        // save it into the crud repo
+        dtoRepo.save(prescriptionDTO);
 
         // Send the prescription DTO to the RabbitMQ queue
-        prescriptionsProducer.sendThePrescription(prescriptionDTO);
+        rabbitTemplate.convertAndSend("prescriptions-queue", prescriptionDTO);
 
 
         return "redirect:patients/patient-list";

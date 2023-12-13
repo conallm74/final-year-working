@@ -3,14 +3,23 @@ package com.project.roku.DTO;
 
 import com.project.roku.entity.Patient;
 import com.project.roku.medical_entities.Prescription;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.annotation.Id;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
 // creating a DTO for data transfer and for easier data entry
 
+@Entity
 public class PrescriptionDTO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     public int pharmacyId;
     // fields from Prescription
@@ -52,6 +61,14 @@ public class PrescriptionDTO {
 
     // getters and setters from prescription
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getPharmacyId() {
         return pharmacyId;
@@ -140,7 +157,9 @@ public class PrescriptionDTO {
     @Override
     public String toString() {
         return "PrescriptionDTO{" +
-                "prescriptionId=" + prescriptionId +
+                "id=" + id +
+                ", pharmacyId=" + pharmacyId +
+                ", prescriptionId=" + prescriptionId +
                 ", patientId=" + patientId +
                 ", medicationName='" + medicationName + '\'' +
                 ", prescriptionDate=" + prescriptionDate +
@@ -152,16 +171,4 @@ public class PrescriptionDTO {
                 '}';
     }
 
-    public Prescription convertDTOToPrescription() {
-        Prescription prescription = new Prescription();
-        prescription.setPatientId(this.patientId);
-        prescription.setMedicationName(this.medicationName);
-        prescription.setPrescriptionDate(this.prescriptionDate);
-        prescription.setDosage(this.dosage);
-        prescription.setPrescribingDoctor(this.prescribingDoctor);
-
-        // Set any other fields as needed
-
-        return prescription;
-    }
 }
