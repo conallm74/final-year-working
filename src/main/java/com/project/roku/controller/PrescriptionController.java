@@ -85,6 +85,8 @@ public class PrescriptionController {
 
         prescriptionService.save(thePrescription);
 
+        // could do some if statement for the if it's send to the pharmacy if (sendTo == pharmacy ){PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
+
         // convert the prescription to the dto
         PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
         // save it into the crud repo

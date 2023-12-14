@@ -2,16 +2,23 @@ package rokuserver;
 
 
 
+import com.google.protobuf.Timestamp;
 import com.project.roku.DTO.PrescriptionDTO;
+import com.project.roku.rabbitmq.PresRabbitListener;
+import com.project.roku.rabbitmq.PresTransferService;
 import com.proto.prescription.PharmacyPrescriptionRequest;
 import com.proto.prescription.PharmacyPrescriptionResponse;
 import com.proto.prescription.PrescriptionServiceGrpc;
+import com.proto.prescription.Target;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @GrpcService
 public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.PrescriptionServiceImplBase {
 
+    @Autowired
+    private PresTransferService presTransferService;
 
     @Override
     public StreamObserver<PharmacyPrescriptionRequest> serverStreamingRPC(StreamObserver<PharmacyPrescriptionResponse> responseObserver) {
@@ -20,11 +27,40 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
 
             @Override
             public void onNext(PharmacyPrescriptionRequest request) {
+                // processing the request and retrieving the data from RabbitMQ
+                try {
+                    PrescriptionDTO processedPres = presTransferService.getProcessedPrescription();
+                    System.out.println("Processed prescription is:" + processedPres.toString());
+
+                    // build the response
+
+                    PharmacyPrescriptionResponse.Builder responseBuilder = PharmacyPrescriptionResponse.newBuilder()
+                            .setPatientFirstName(processedPres.getPatientFirstName())
+                            .setPatientLastName(processedPres.getPatientLastName())
+                            .setPatientAddress(processedPres.getPatientAddress())
+                            .setPrescriberName(processedPres.getPrescribingDoctor())
+                            .setPrescriptionId(processedPres.getPrescriptionId())
+                            .setPharmacyId(processedPres.getPharmacyId())
+                            .setMedicationName(processedPres.getMedicationName())
+                            .setPrescriptionDate(Timestamp.newBuilder().buildPartial())
+                            .setDosage(processedPres.getDosage())
+                            .setPharmacyId(processedPres.getPharmacyId());
+                            // still need the target
+                    responseObserver.onNext(responseBuilder.build());
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+
+
+            @Override
+                 */
 
                 int pharmacyId = request.getPharmacyId();
 
-                // create
-                PrescriptionDTO prescriptionDTO = getPrescriptionDTO(request.getPharmacyId());
+
 
                 /*
                  // Use the populated PrescriptionDTO from the controller
@@ -62,23 +98,6 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
                 String medicationName = request.getMedicationName();
 
  */
-
-
-                /*
-                  string patient_last_name = 2;
-  string patient_address = 3;
-  string prescriber_name = 4;
-  int32 prescription_id = 5;
-  string medication_name = 6;
-  google.protobuf.Timestamp prescription_date = 7;
-  string dosage = 8;
-  Target target_type = 9;
-  int32 pharmacy_id = 10;
-                 */
-
-               //  String dosage = request.getDosage();
-               //  int prescriptionId = request.getPrescriptionId();
-
 /*
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPrescriptionId(request.getPrescriptionId()).build());
                 responseObserver.onNext(PharmacyPrescriptionResponse.newBuilder().setPatientFirstName(request.getPatientFirstName()).build());;
@@ -103,31 +122,5 @@ public class PharmacyPrescriptionService extends PrescriptionServiceGrpc.Prescri
             }
         };
     }
-
-    /*
-    @Service
-public class PharmacyPrescriptionServiceImpl extends PharmacyPrescriptionServiceGrpc.PharmacyPrescriptionServiceImplBase {
-
-    @Override
-    public void sendPrescription(PharmacyPrescriptionRequest request, StreamObserver<PharmacyPrescriptionResponse> responseObserver) {
-        // Implement logic to process the received prescription data
-        String prescriptionData = request.getPrescriptionData();
-        System.out.println("Received prescription data from doctor: " + prescriptionData);
-
-        // Process the prescription data as needed
-
-        // Send a response back to the doctor
-        PharmacyPrescriptionResponse response = PharmacyPrescriptionResponse.newBuilder()
-                .setMessage("Prescription received and processed")
-                .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
-}
-     */
-
-
-
 
 }

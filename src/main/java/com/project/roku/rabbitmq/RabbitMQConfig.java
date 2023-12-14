@@ -1,4 +1,4 @@
-package com.project.roku.configuration;
+package com.project.roku.rabbitmq;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
