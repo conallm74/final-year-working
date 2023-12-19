@@ -76,8 +76,8 @@ public class PrescriptionController {
     }
     
     // variable for the dto Json
-    @Autowired
-    private PrescriptionDTO prescriptionJsonConvert;
+    // @Autowired
+    //private PrescriptionDTO prescriptionJsonConvert;
 
     // save the new prescription, convert to dto, and send to the Rabbit Queue
     @PostMapping("/prescribePrescription")
@@ -108,9 +108,9 @@ public class PrescriptionController {
     }
 
     // Getter for prescriptionJson
-    public PrescriptionDTO getPrescriptionJson() {
-        return prescriptionJsonConvert;
-    }
+    // public PrescriptionDTO getPrescriptionJson() {
+       // return prescriptionJsonConvert;
+   // }
 
 
     // method to convert the prescription to a dto

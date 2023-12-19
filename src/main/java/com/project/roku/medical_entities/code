@@ -479,6 +479,24 @@ from the DTO class
               */
 
 
+////
+ // make a channel to the server with ManagedChannel
+    ManagedChannel channel = ManagedChannelBuilder.forTarget(target)
+            .usePlaintext()
+            .build();
 
+    // create an async stub
+    PrescriptionServiceGrpc.PrescriptionServiceStub asyncStub = PrescriptionServiceGrpc.newStub(channel);
+
+    // call method for updates
+
+    prescriptionSubscription(asyncStub);
+
+    Thread.sleep(2000);
+
+    private static void prescriptionSubscription(PrescriptionServiceGrpc.PrescriptionServiceStub asyncStub){
+        // create a request with the pharmacy Id
+        .setPharmacyId
+    }
 
 
