@@ -1,7 +1,8 @@
 package com.project.roku.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.roku.DTO.PrescriptionDTO;
-import com.project.roku.dao.DTORepo;
 import com.project.roku.entity.Patient;
 import com.project.roku.medical_entities.Pharmacy;
 import com.project.roku.medical_entities.Prescription;
@@ -13,6 +14,8 @@ import com.project.roku.services.producers.PrescriptionsProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +27,8 @@ import java.util.List;
 @RequestMapping("/prescriptions")
 public class PrescriptionController {
 
-    // injecting the prescriptions Producer
-    private final PrescriptionsProducer prescriptionsProducer;
 
-    private final DTORepo dtoRepo;
+
     private PatientRepoService patientService;
 
     // injecting prescription service
@@ -35,21 +36,18 @@ public class PrescriptionController {
 
     private PharmaRepoService pharmacyRepoService;
 
-    // import Rabbit template
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     PharmaRepoServiceImpl serviceImpl;
 
     @Autowired
     public PrescriptionController(
-            PrescriptionsProducer prescriptionsProducer, DTORepo dtoRepo, PatientRepoService patientService,
+            PatientRepoService patientService,
             PrescriptionRepoService prescriptionService,
             PharmaRepoService pharmacyRepoService
     ) {
-        this.prescriptionsProducer = prescriptionsProducer;
-        this.dtoRepo = dtoRepo;
+
+
         this.pharmacyRepoService = pharmacyRepoService;
         this.patientService = patientService;
         this.prescriptionService = prescriptionService;
@@ -76,27 +74,42 @@ public class PrescriptionController {
         // send over to our form
         return "prescriptions/prescription-form";
     }
-
-
+    
+    // variable for the dto Json
+    @Autowired
+    private PrescriptionDTO prescriptionJsonConvert;
 
     // save the new prescription, convert to dto, and send to the Rabbit Queue
     @PostMapping("/prescribePrescription")
-    public String prescribePrescription(@ModelAttribute("prescription") Prescription thePrescription, Patient thePatient){
+    public String prescribePrescription(@ModelAttribute("prescription") Prescription thePrescription, Patient thePatient) throws JsonProcessingException {
+
 
         prescriptionService.save(thePrescription);
 
         // could do some if statement for the if it's send to the pharmacy if (sendTo == pharmacy ){PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
 
-        // convert the prescription to the dto
-        PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
-        // save it into the crud repo
-        dtoRepo.save(prescriptionDTO);
 
-        // Send the prescription DTO to the RabbitMQ queue
-        rabbitTemplate.convertAndSend("prescriptions-queue", prescriptionDTO);
+        if (thePrescription.getPatient() == null) { // test this to see if this check logic is robust enough
+            // convert the prescription to the dto
+            PrescriptionDTO prescriptionDTO = convertToDTO(thePrescription, thePatient);
 
+            // check is user is authenticated
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return "redirect:patients/patient-list";
+            if (authentication != null) {
+                return "redirect:/patients/patientList";
+            } else {
+                return "redirect:login";
+            }
+        } else {
+            return null; // here will be the logic for the qr code
+        }
+
+    }
+
+    // Getter for prescriptionJson
+    public PrescriptionDTO getPrescriptionJson() {
+        return prescriptionJsonConvert;
     }
 
 
@@ -114,5 +127,6 @@ public class PrescriptionController {
         prescriptionDTO.setMedicationName(thePrescription.getMedicationName());
         return prescriptionDTO;
     }
+
 
 }

@@ -3,8 +3,8 @@ package com.project.roku.services.prescription_services;
 import com.project.roku.DTO.PrescriptionDTO;
 import com.project.roku.dao.PrescriptionRepo;
 import com.project.roku.medical_entities.Prescription;
-import com.proto.prescription.PharmacyPrescriptionRequest;
-import com.proto.prescription.PharmacyPrescriptionResponse;
+//import com.proto.prescription.PharmacyPrescriptionRequest;
+//import com.proto.prescription.PharmacyPrescriptionResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class PrescriptionServiceImpl implements PrescriptionRepoService {
 
 
     // mapping the proto file request PharmacyPresRequest to the dto.
-
+/*
     public PharmacyPrescriptionResponse convertDTOToRequest(PrescriptionDTO prescriptionDTO) {
 
         PharmacyPrescriptionResponse request = PharmacyPrescriptionResponse.newBuilder()
@@ -89,6 +89,8 @@ public class PrescriptionServiceImpl implements PrescriptionRepoService {
                 .build();
         return request;
     }
+
+ */
 
 
 }

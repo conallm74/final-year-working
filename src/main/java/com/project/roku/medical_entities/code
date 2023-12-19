@@ -266,3 +266,219 @@ from the DTO class
             <option th:each="pharmacy : ${pharmacies}" th:value="${pharmacy.pharmacyRecipientId}" th:data-recipient-id="${pharmacy.pharmacyRecipientId}" th:text="${pharmacy.pharmacyName}"></option>
             <!--   <option th:each="pharmacy : ${pharmacies}" th:value="${pharmacy.pharmacyRecipientId + '-' + pharmacy.pharmacyName}" th:text="${pharmacy.pharmacyName}"></option> -->
         </select>
+
+
+
+        // code for the pom for the grpc service module
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+
+            <groupId>org.example</groupId>
+            <artifactId>grpc-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+            <properties>
+                <maven.compiler.source>17</maven.compiler.source>
+                <maven.compiler.target>17</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>net.devh</groupId>
+                    <artifactId>grpc-server-spring-boot-starter</artifactId>
+                    <version>2.15.0.RELEASE</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.example</groupId>
+                    <artifactId>Proto</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.project</groupId>
+                    <artifactId>roku</artifactId>
+                    <version>0.0.1-SNAPSHOT</version>
+                    <scope>compile</scope>
+                </dependency>
+            </dependencies>
+
+        </project>
+
+
+        //  pom for client
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+
+            <groupId>org.example</groupId>
+            <artifactId>client-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+            <properties>
+                <maven.compiler.source>17</maven.compiler.source>
+                <maven.compiler.target>17</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <version>3.2.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.devh</groupId>
+                    <artifactId>grpc-client-spring-boot-starter</artifactId>
+                    <version>2.15.0.RELEASE</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.example</groupId>
+                    <artifactId>Proto</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <scope>compile</scope>
+                </dependency>
+            </dependencies>
+
+        </project>
+
+
+
+        // and finally, the pom for the proto
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+
+            <groupId>org.example</groupId>
+            <artifactId>Proto</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+            <properties>
+                <maven.compiler.source>17</maven.compiler.source>
+                <maven.compiler.target>17</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            </properties>
+
+            <dependencies>
+                <dependency>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-stub</artifactId>
+                    <version>1.53.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-protobuf</artifactId>
+                    <version>1.53.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.annotation</groupId>
+                    <artifactId>javax.annotation-api</artifactId>
+                    <version>1.3.2</version>
+                </dependency>
+
+            </dependencies>
+
+            <build>
+                <extensions>
+                    <extension>
+                        <groupId>kr.motd.maven</groupId>
+                        <artifactId>os-maven-plugin</artifactId>
+                        <version>1.6.1</version>
+                    </extension>
+                </extensions>
+                <plugins>
+                    <plugin>
+                        <groupId>org.xolstice.maven.plugins</groupId>
+                        <artifactId>protobuf-maven-plugin</artifactId>
+                        <version>0.6.1</version>
+                        <configuration>
+                            <protocArtifact>
+                                com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}
+                            </protocArtifact>
+                            <pluginId>grpc-java</pluginId>
+                            <pluginArtifact>
+                                io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
+                            </pluginArtifact>
+
+                            <protoSourceRoot>
+                                ${basedir}/src/main/protobuf
+                            </protoSourceRoot>
+
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>compile-custom</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+
+
+        </project>
+
+
+        /// the initial bi-directional bi-directional streaming method
+
+            @Override
+            public StreamObserver<PharmacyPrescriptionRequest> serverStreamingRPC(StreamObserver<PharmacyPrescriptionResponse> responseObserver) {
+
+                return new StreamObserver<PharmacyPrescriptionRequest>() {
+
+                    @Override
+                    public void onNext(PharmacyPrescriptionRequest request) {
+                        // processing the request and retrieving the data from RabbitMQ
+                        PrescriptionDTO processedPres = prescriptionController.getPrescriptionJson();
+                        System.out.println("Processed prescription is:" + processedPres.toString());
+                        int pharmacyId = request.getPharmacyId();
+                        // build the response
+
+                        PharmacyPrescriptionResponse.Builder responseBuilder = PharmacyPrescriptionResponse.newBuilder()
+
+                                .setPatientLastName(processedPres.getPatientLastName())
+                                .setPatientAddress(processedPres.getPatientAddress())
+                                .setPrescriberName(processedPres.getPrescribingDoctor())
+                                .setPrescriptionId(processedPres.getPrescriptionId())
+                                .setPharmacyId(processedPres.getPharmacyId())
+                                .setMedicationName(processedPres.getMedicationName())
+                                .setPrescriptionDate(Timestamp.newBuilder().buildPartial())
+                                .setDosage(processedPres.getDosage())
+                                .setPharmacyId(processedPres.getPharmacyId());
+                        // still need the target
+                        responseObserver.onNext(responseBuilder.build());
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        responseObserver.onError(throwable);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        responseObserver.onCompleted();
+                    }
+                };
+            }
+
+              */
+
+
+
+
+

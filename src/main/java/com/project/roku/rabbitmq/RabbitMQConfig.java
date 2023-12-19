@@ -27,13 +27,22 @@ public class RabbitMQConfig {
     public Binding binding(Queue queue, DirectExchange exchange){
         return BindingBuilder.bind(queue).to(exchange).with("prescriptions");
     }
-
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter()); // Use Jackson for message conversion
         return rabbitTemplate;
     }
+
+    /*
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter()); // Use Jackson for message conversion
+        return rabbitTemplate;
+    }
+
+     */
 
 
 }

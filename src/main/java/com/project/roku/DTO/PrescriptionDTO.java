@@ -1,11 +1,13 @@
 package com.project.roku.DTO;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.roku.entity.Patient;
 import com.project.roku.medical_entities.Prescription;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.annotation.Id;
 
@@ -14,33 +16,41 @@ import java.time.LocalDate;
 
 // creating a DTO for data transfer and for easier data entry
 
-@Entity
+
 public class PrescriptionDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
+    @JsonProperty("pharmacy_id")
     public int pharmacyId;
     // fields from Prescription
+
+    @JsonProperty("prescription_id")
     private int prescriptionId;
 
+    @JsonProperty("patient_id")
     private int patientId;
 
+    @JsonProperty("medication_name")
     private String medicationName;
 
+    @JsonProperty("prescription_date")
     private java.sql.Date prescriptionDate;
 
+    @JsonProperty("prescribing_doctor")
     private String prescribingDoctor;
 
+    @JsonProperty("dosage")
     private String dosage;
 
     // fields from Patient
 
+    @JsonProperty("patient_first_name")
     private String patientFirstName;
 
+    @JsonProperty("patient_last_name")
     private String patientLastName;
 
+    @JsonProperty("patient_address")
     private String patientAddress;
 
 
@@ -61,14 +71,6 @@ public class PrescriptionDTO {
 
     // getters and setters from prescription
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getPharmacyId() {
         return pharmacyId;
@@ -157,7 +159,6 @@ public class PrescriptionDTO {
     @Override
     public String toString() {
         return "PrescriptionDTO{" +
-                "id=" + id +
                 ", pharmacyId=" + pharmacyId +
                 ", prescriptionId=" + prescriptionId +
                 ", patientId=" + patientId +
