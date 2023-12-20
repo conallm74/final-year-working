@@ -13,25 +13,26 @@ import java.io.IOException;
 @Configuration
 public class ServerConfig {
 
-    @Value("${grpc.server.port}")
-    private int grpcPort;
+    // @Value("${grpc.server.port}")
+    // private int grpcPort;
 
     private Server server;
 
+    int port = 50051;
     // auto wire the service impl
     @Autowired
     private PharmacyPrescriptionService pharmacyPrescriptionService;
 
     @PostConstruct
     public void startGrpcServer() throws IOException, InterruptedException {
-        server = ServerBuilder.forPort(grpcPort)
+        server = ServerBuilder.forPort(port)
                 .addService(pharmacyPrescriptionService)
                 .build()
                 .start();
 
 
         System.out.println("Server started");
-        System.out.println("LISTENING on port:" + grpcPort);
+        System.out.println("LISTENING on port:" + port);
 
         // shut down of the server
         Runtime.getRuntime().addShutdownHook(new Thread(()-> {
