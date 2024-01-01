@@ -1,4 +1,4 @@
-package com.project.roku;
+package com.project.roku.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -10,7 +10,7 @@ import com.project.roku.services.patient_services.PatientRepoService;
 import com.project.roku.services.pharmacy_services.PharmaRepoService;
 import com.project.roku.services.pharmacy_services.PharmaRepoServiceImpl;
 import com.project.roku.services.prescription_services.PrescriptionRepoService;
-import com.project.roku.services.producers.PrescriptionsProducer;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

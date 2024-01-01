@@ -1,4 +1,4 @@
-package com.project.roku.controller;
+package project.roku.controller;
 
 import com.project.roku.entity.Patient;
 import com.project.roku.services.patient_services.PatientRepoService;

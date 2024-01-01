@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
-public class PatientDAOImpl implements PatientDAO{
+public class PatientDAOImpl implements com.project.roku.dao.PatientDAO {
 
     // daoImpl to find the patient by first and last name
     @PersistenceContext
